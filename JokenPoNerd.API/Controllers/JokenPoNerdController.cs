@@ -25,14 +25,21 @@ namespace JokenPoNerd.API.Controllers
 
         [HttpPost]
         [Route("v1/JokenPoNerd")]
-        [ProducesResponseType(typeof(ResultViewModel),StatusCodes.Status200OK )]
+        [ProducesResponseType(typeof(ResultViewModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ResultViewModel), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ResultViewModel), StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<ResultViewModel>> JokenPoNerdAsync([FromBody] JokenPoViewModel jokenPo )
+        public async Task<ActionResult<ResultViewModel>> JokenPoNerdAsync([FromBody] JokenPoViewModel jokenPo)
         {
             try
             {
-                 bool campos=  jokenPo.ValidarCampos();
+
+                if (jokenPo == null)
+                {
+                    _notificador.Add("Parametros de entrada inválidos");
+                    return BadRequest(new ResultViewModel(_notificador.ObterNotificacoes()));
+                }
+
+                bool campos = jokenPo.ValidarCampos();
 
 
                 if (campos == false)
@@ -43,7 +50,7 @@ namespace JokenPoNerd.API.Controllers
 
                 var result = await _jokenPoNerdService.JokenPoNerdAsync(jokenPo);
 
-                if(result == null)
+                if (result == null)
                     return BadRequest(new ResultViewModel(_notificador.ObterNotificacoes()));
 
                 return Ok(result);

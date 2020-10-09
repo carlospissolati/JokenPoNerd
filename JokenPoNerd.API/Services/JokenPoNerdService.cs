@@ -19,8 +19,6 @@ namespace JokenPoNerd.API.Services
 
             string resultadoGanhador = jokenPo.VerificarGanhador();
 
-
-
             ResultViewModel result = new ResultViewModel(resultadoGanhador);
 
             return result;
